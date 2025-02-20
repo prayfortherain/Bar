@@ -1,6 +1,7 @@
 package com.example.bar
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,24 +16,29 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import io.realm.kotlin.Realm
 
-/*
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun BarPreview() {
-    CocktailListScreen()
-}
 
 @Composable
-fun CocktailCard(cocktail: Cocktail) {
+fun CocktailCard(cocktail: Cocktail, navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
+            .clickable(
+                onClick = {
+                    var name = cocktail.name
+                    navController.navigate("result/$name")
+                }
+            )
     ) {
         Column {
             Text(
@@ -48,22 +54,25 @@ fun CocktailCard(cocktail: Cocktail) {
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Composable
-fun CocktailListScreen() {
-    val cocktails = listOf(
-        Cocktail(1, "Маргарита", listOf("Текила", "Лайм", "Апельсиновый ликёр"), "Смешать ингредиенты и украсить солью.", "https://example.com/margarita.jpg"),
-        Cocktail(2, "Мохито", listOf("Ром", "Лайм", "Мята", "Сахар", "Газированная вода"), "Размять лайм и мяту, добавить ром, сахар и газированную воду.", "https://example.com/mojito.jpg")
-    )
 
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CocktailListScreen(viewModel: BarViewModel, navController: NavController) {
+
+    val cocktails by viewModel.cocktails.collectAsState()
+
+    /*
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(text = "Рецепты Коктейлей") })
+            TopAppBar(title = { Text(text = "Рецепты Коктейлей", fontSize = 13.sp) })
         },
         content = {
             if (cocktails.isNotEmpty()) {
-                LazyColumn {
+                LazyColumn(
+                    modifier = Modifier.padding()
+                ){
                     items(cocktails) { cocktail ->
                         CocktailCard(cocktail = cocktail)
                     }
@@ -75,15 +84,13 @@ fun CocktailListScreen() {
             }
         }
     )
+
+     */
+    LazyColumn(
+        modifier = Modifier.padding()
+    ){
+        items(cocktails) { cocktail ->
+            CocktailCard(cocktail = cocktail, navController)
+        }
+    }
 }
-
-
-data class Cocktail(
-    val id: Int,
-    val name: String,
-    val ingredients: List<String>,
-    val instructions: String,
-    val imageUrl: String? = null
-)
-
- */

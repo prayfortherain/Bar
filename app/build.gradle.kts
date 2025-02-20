@@ -1,16 +1,17 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("io.realm.kotlin") version "1.11.0"
 }
 
 android {
     namespace = "com.example.bar"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.bar"
         minSdk = 29
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -74,4 +75,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     //viewmodel
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    //nav
+    implementation(libs.androidx.navigation.compose)
 }
